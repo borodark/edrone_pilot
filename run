@@ -1,0 +1,9 @@
+#!/usr/bin/env escript 
+%% -*- erlang -*- 
+main([]) -> 
+	code:add_path("deps/inpevt"), 
+	code:add_path("deps/inpevt/ebin"), 
+	code:add_path("."), 
+	code:add_path("ebin"), 
+	application:start(inpevt), application:start(edrone_pilot).
+	
