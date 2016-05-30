@@ -35,8 +35,8 @@
 -define(THROTTLE_MIN_DEFAULT, 0).
 -define(THROTTLE_MAX_DEFAULT, 1023).
 
--define(JOYSTICK_DEVICE_DEFAULT, "/dev/input/event21").
--define(DRONE_ADDR_DEFAULT, { "192.168.43.156", 5555 }).
+-define(JOYSTICK_DEVICE_DEFAULT, "/dev/input/event11").
+-define(DRONE_ADDR_DEFAULT, { "192.168.1.145", 5555 }).
 
 
 -define(PITCH_CMD,          16#0001).
@@ -331,7 +331,7 @@ send_joystick(Key, Val, #st { drone_socket = Socket,
 			      drone_address = { Addr, Port } }) ->
     case encode_cmd(Key) of
 	error -> {error, unknown_key};
-	Field -> gen_udp:send(Socket, Addr, Port, << Field:6/unsigned, Val:10/unsigned >>)
+	Field -> gen_udp:send(Socket, Addr, Port, << Field:8/unsigned, Val:16/unsigned >>)
     end.
 
 	    
