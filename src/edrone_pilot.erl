@@ -35,8 +35,8 @@
 -define(THROTTLE_MIN_DEFAULT, 0).
 -define(THROTTLE_MAX_DEFAULT, 1023).
 
--define(JOYSTICK_DEVICE_DEFAULT, "/dev/input/event11").
--define(DRONE_ADDR_DEFAULT, { "192.168.1.145", 5555 }).
+-define(JOYSTICK_DEVICE_DEFAULT, "/dev/input/event7").
+-define(DRONE_ADDR_DEFAULT, { "192.168.43.7", 5555 }).
 
 
 -define(PITCH_CMD,          16#0001).
@@ -200,8 +200,8 @@ handle_info(#input_event { type = abs, code_sym = rz, value = Val },
 	    #st { yaw_min = Min, yaw_max = Max } = St) ->
 
     NormVal = calc_norm_val(Val, Min, Max),
-    %% io:format("                           yaw(~p)~n", [ NormVal]),
-    %% send_joystick(yaw, NormVal, St),
+    io:format("                           yaw(~p)~n", [ NormVal]),
+    send_joystick(yaw, NormVal, St),
     {noreply, St#st { yaw = NormVal }};
 
 handle_info(#input_event { type = abs, code_sym = throttle, value = Val },
