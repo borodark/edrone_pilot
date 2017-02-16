@@ -36,7 +36,7 @@
 -define(THROTTLE_MAX_DEFAULT, 1023).
 
 -define(JOYSTICK_DEVICE_DEFAULT, "/dev/input/event7").
--define(DRONE_ADDR_DEFAULT, { "192.168.43.7", 5555 }).
+-define(DRONE_ADDR_DEFAULT, { "192.168.245.1", 5555 }).
 
 
 -define(PITCH_CMD,          16#0001).
@@ -183,7 +183,7 @@ handle_info(#input_event { type = abs, code_sym = y, value = Val },
 	    #st { pitch_min = Min, pitch_max = Max } = St) ->
 
     NormVal = calc_norm_val(Val, Min, Max),
-     io:format("pitch(~p)~n", [ NormVal]),
+%%     io:format("pitch(~p)~n", [ NormVal]),
     send_joystick(pitch, NormVal, St),
     {noreply, St#st { pitch = NormVal }};
 
@@ -192,7 +192,7 @@ handle_info(#input_event { type = abs, code_sym = x, value = Val },
 	    #st { roll_min = Min, roll_max = Max } = St) ->
 
     NormVal = calc_norm_val(Val, Min, Max),
-    io:format("              roll(~p)~n", [NormVal]),
+%%    io:format("              roll(~p)~n", [NormVal]),
     send_joystick(roll, NormVal, St),
     {noreply, St#st { roll = NormVal }};
 
@@ -200,7 +200,7 @@ handle_info(#input_event { type = abs, code_sym = rz, value = Val },
 	    #st { yaw_min = Min, yaw_max = Max } = St) ->
 
     NormVal = calc_norm_val(Val, Min, Max),
-    io:format("                           yaw(~p)~n", [ NormVal]),
+%%    io:format("                           yaw(~p)~n", [ NormVal]),
     send_joystick(yaw, NormVal, St),
     {noreply, St#st { yaw = NormVal }};
 
@@ -254,7 +254,7 @@ handle_info(#input_event { type = key, code_sym = pinkie, value = 1 },
     {noreply, St#st { yaw_trim = NTrim }};
 
 
-handle_info(#input_event { type = key, code_sym = top2, value = 1} , 
+handle_info(#input_event { type = key, code_sym = base, value = 1} , 
 	    #st { yaw_trim = PTrim } = St)  when PTrim > -512 ->
     NTrim = PTrim - 1,
     io:format("                                                          yaw_trim(~p)~n", [ NTrim]),
@@ -280,12 +280,12 @@ handle_info(#input_event { type = key, code_sym = thumb, value = 1}, St) ->
 
 
 
-handle_info(#input_event { type = syn }, St) ->
+handle_info(#input_event { type = syn, code_sym = Code_sym }, St) ->
+   %% io:format("~p~n", [ Code_sym ]),
     {noreply, St};
 
-
-handle_info(_Info, St) ->
-%%     io:format("handle_info()??: ~p~n", [ Info ]),
+handle_info(Info, St) ->
+    io:format("~p~n", [ Info ]),
     {noreply, St}.
 
 %%--------------------------------------------------------------------
